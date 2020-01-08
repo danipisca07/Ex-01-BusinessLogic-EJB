@@ -2,10 +2,9 @@ package it.distributedsystems.model.ejb;
 
 //import it.distributedsystems.model.logging.OperationLogger;
 import it.distributedsystems.model.dao.*;
+import org.hibernate.Hibernate;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.ejb.Local;
 import javax.ejb.Remote;
@@ -31,7 +30,7 @@ public class EJB3ProductDAO implements ProductDAO {
 //    @Interceptors(OperationLogger.class)
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public int insertProduct(Product product) {
-
+        product.setProducer(em.merge(product.getProducer()));
         em.persist(product);
         return product.getId();
     }
@@ -83,13 +82,17 @@ public class EJB3ProductDAO implements ProductDAO {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public Product findProductById(int id) {
-        return em.find(Product.class, id);
+        Product product= em.find(Product.class, id);
+        Hibernate.initialize(product.getProducer());
+        return product;
     }
 
-    @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<Product> getAllProducts() {
-        return em.createQuery("from Product").getResultList();
+        List<Product> result= em.createQuery("from Product").getResultList();
+        for (Product product : result)
+           Hibernate.initialize(product.getProducer());
+        return result;
     }
 
     @Override
@@ -109,4 +112,3 @@ public class EJB3ProductDAO implements ProductDAO {
                 setParameter("purchaseId", purchase.getId()).getResultList();
     }
 }
-

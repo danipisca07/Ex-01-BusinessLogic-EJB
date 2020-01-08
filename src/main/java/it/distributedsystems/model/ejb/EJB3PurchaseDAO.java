@@ -19,6 +19,8 @@ import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.hibernate.Hibernate;
+
 
 
 @Stateless
@@ -115,8 +117,11 @@ import javax.persistence.PersistenceContext;
     public List<Purchase> findAllPurchasesByCustomer(Customer customer) {
         //Non è stato necessario usare una fetch join (nonostante Purchase.customer fosse mappato LAZY)
         //perché gli id delle entità LAZY collegate vengono comunque mantenuti e sono accessibili
-        return em.createQuery("FROM Purchase p WHERE :customerId = p.customer.id").
+        List<Purchase> result= em.createQuery("FROM Purchase p WHERE :customerId = p.customer.id").
                 setParameter("customerId", customer.getId()).getResultList();
+        for(Purchase purchase:result)
+            Hibernate.initialize(purchase.getProducts());
+        return result;
     }
 
     @Override

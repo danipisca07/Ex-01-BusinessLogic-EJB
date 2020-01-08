@@ -18,7 +18,6 @@ public class Producer implements Serializable {
     public Producer(String name) { this.name = name; }
 
     @Id
-    @GeneratedValue
     public int getId() {
         return id;
     }
