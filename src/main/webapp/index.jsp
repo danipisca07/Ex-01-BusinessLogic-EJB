@@ -109,15 +109,6 @@
 		</form>
 	</div>
 
-	<div>
-		<p>Add Product:</p>
-		<form>
-			Name: <input type="text" name="name"/><br/>
-			Product Number: <input type="text" name="number"/><br/>
-			<input type="hidden" name="operation" value="insertProduct"/>
-			<input type="submit" name="submit" value="submit"/>
-		</form>
-	</div>
 	<%
 		List producers = producerDAO.getAllProducers();
 		if ( producers.size() > 0 ) {
