@@ -1,21 +1,16 @@
 package it.distributedsystems.model.ejb;
 
 //import it.distributedsystems.model.logging.OperationLogger;
-import it.distributedsystems.model.dao.Customer;
-import it.distributedsystems.model.dao.Product;
-import it.distributedsystems.model.dao.Purchase;
-import it.distributedsystems.model.dao.PurchaseDAO;
+import it.distributedsystems.model.dao.*;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Local;
-import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -40,16 +35,19 @@ import org.hibernate.Hibernate;
             purchase.setCustomer(em.merge(purchase.getCustomer()));
 
         //riattacco i product al contesto di persistenza
-        Set<Product> products = new HashSet<Product>();
+        Set<OrderVoice> orderVoices = new HashSet<OrderVoice>();
 
-        if (purchase.getProducts()!= null ){
-            for (Product product : purchase.getProducts()){
-                if(product != null && product.getId() > 0)
-                    products.add(em.merge(product));
+        if (purchase.getOrderVoices()!= null ) {
+            for (OrderVoice o : purchase.getOrderVoices()) {
+                if (o != null) {
+                    if (o.getId() > 0)
+                        orderVoices.add(em.merge(o));
+                    else
+                        orderVoices.add(o);
+                }
+                purchase.setOrderVoices(orderVoices);
             }
-            purchase.setProducts(products);
         }
-
         em.persist(purchase);
         return purchase.getId();
     }
@@ -120,7 +118,7 @@ import org.hibernate.Hibernate;
         List<Purchase> result= em.createQuery("FROM Purchase p WHERE :customerId = p.customer.id").
                 setParameter("customerId", customer.getId()).getResultList();
         for(Purchase purchase:result)
-            Hibernate.initialize(purchase.getProducts());
+            Hibernate.initialize(purchase.getOrderVoices());
         return result;
     }
 
@@ -129,11 +127,11 @@ import org.hibernate.Hibernate;
     public List<Purchase> findAllPurchasesByProduct(Product product) {
         if (product != null){
             em.merge(product); // riattacco il product al contesto di persistenza con una merge
-            return em.createQuery("SELECT DISTINCT (p) FROM Purchase p JOIN FETCH p.products JOIN FETCH p.customer WHERE :product MEMBER OF p.products").
+            return em.createQuery("SELECT DISTINCT (p) FROM Purchase p JOIN FETCH p.orderVoices JOIN FETCH p.customer WHERE :product MEMBER OF p.orderVoices").
                     setParameter("product", product).getResultList();
         }
         else
-            return em.createQuery("SELECT DISTINCT (p) FROM Purchase p JOIN FETCH p.products JOIN FETCH p.customer").getResultList();
+            return em.createQuery("SELECT DISTINCT (p) FROM Purchase p JOIN FETCH p.orderVoices JOIN FETCH p.customer").getResultList();
 
     }
 

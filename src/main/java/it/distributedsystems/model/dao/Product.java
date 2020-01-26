@@ -3,7 +3,6 @@ package it.distributedsystems.model.dao;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
-import it.distributedsystems.model.dao.Purchase;
 
 @Entity
 public class Product implements Serializable {
@@ -14,7 +13,7 @@ public class Product implements Serializable {
     protected int productNumber;
     protected String name;
     protected int price;
-    protected Purchase purchase;
+    protected Set<OrderVoice> orderVoices;
     protected Producer producer;
 
     public Product() {}
@@ -54,16 +53,17 @@ public class Product implements Serializable {
         this.price = price;
     }
 
-    @ManyToOne(
+    @OneToMany(
             cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
-            fetch = FetchType.LAZY
+            fetch = FetchType.LAZY,
+            mappedBy = "product"
     )
-    public Purchase getPurchase() {
-        return this.purchase;
+    public Set<OrderVoice> getOrderVoices() {
+        return this.orderVoices;
     }
 
-    public void setPurchase(Purchase purchase) {
-        this.purchase = purchase;
+    public void setOrderVoices(Set<OrderVoice> orderVoices) {
+        this.orderVoices = orderVoices;
     }
 
     @ManyToOne(

@@ -2,6 +2,7 @@ package it.distributedsystems.model.dao;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 
 @Entity
@@ -12,7 +13,7 @@ public class Purchase implements Serializable {
     protected int id;
     protected int purchaseNumber;
     protected Customer customer;
-    protected Set<Product> products;
+    protected Set<OrderVoice> orderVoices;
 
     public Purchase() {}
 
@@ -23,10 +24,10 @@ public class Purchase implements Serializable {
         this.customer = customer;
     }
 
-    public Purchase(int purchaseNumber, Customer customer, Set<Product> products) {
+    public Purchase(int purchaseNumber, Customer customer, Set<OrderVoice> orderVoices) {
         this.purchaseNumber = purchaseNumber;
         this.customer = customer;
-        this.products = products;
+        this.orderVoices = orderVoices;
     }
 
     @Id
@@ -55,11 +56,11 @@ public class Purchase implements Serializable {
     public void setCustomer(Customer customer) { this.customer = customer; }
 
     @OneToMany(
-            cascade={CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
-            fetch=FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
             mappedBy = "purchase"
     )
-    public Set<Product> getProducts() { return products; }
+    public Set<OrderVoice> getOrderVoices() { return orderVoices; }
 
-    public void setProducts(Set<Product> products) { this.products = products; }
+    public void setOrderVoices(Set<OrderVoice> orderVoices) { this.orderVoices = orderVoices; }
 }
