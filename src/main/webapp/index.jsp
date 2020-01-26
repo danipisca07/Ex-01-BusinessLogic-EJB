@@ -51,7 +51,8 @@
 	</head>
 	
 	<body>
-
+		<a href="login.jsp">Login</a>
+		<a href="orderList.jsp">Order list</a>
 	<%
 		// can't use builtin object 'application' while in a declaration!
 		// must be in a scriptlet or expression!
