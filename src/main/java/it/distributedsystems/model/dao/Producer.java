@@ -18,6 +18,7 @@ public class Producer implements Serializable {
     public Producer(String name) { this.name = name; }
 
     @Id
+    @GeneratedValue
     public int getId() {
         return id;
     }
@@ -37,7 +38,7 @@ public class Producer implements Serializable {
 
     @OneToMany(
             cascade={CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
-            fetch=FetchType.LAZY,
+            fetch=FetchType.EAGER,
             mappedBy = "producer"
     )
     public Set<Product> getProducts() {

@@ -39,7 +39,7 @@ public class Customer implements Serializable {
 
     @OneToMany(
             cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             mappedBy = "customer"
     )
     public Set<Purchase> getPurchases() { return purchases; }
