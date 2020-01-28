@@ -29,6 +29,7 @@ public class EJB3ProductDAO implements ProductDAO {
     @Override
 //    @Interceptors(OperationLogger.class)
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @Interceptors(LoggerInterceptor.class)
     public int insertProduct(Product product) {
         product.setProducer(em.merge(product.getProducer()));
         em.persist(product);
