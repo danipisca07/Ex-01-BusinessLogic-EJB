@@ -16,6 +16,12 @@
         <validation-mode>CALLBACK</validation-mode>
         <properties>
 
+            <!-- PRIMA
+            Aggiungi JDBC driver per mysql a wildfly  seguendo:
+                https://medium.com/@hasnat.saeed/install-and-configure-mysql-jdbc-driver-on-jboss-wildfly-e751a3be60d3
+            Aggiungi datasource a wildfly tramite CLI con:
+                data-source add --name=DefaultDS --jndi-name=java:/DefaultDS --driver-name=mysql-connector-java-8.0.19.jar_com.mysql.jdbc.Driver_5_1 --connection-url=jdbc:mysql://remotemysql.com:3306/gSdyGeijfP --user-name=gSdyGeijfP --password=QDrrEGhXoP
+            -->
             <property name="connection.url" value="jdbc:mysql://remotemysql.com:3306/gSdyGeijfP"/>
             <property name="connection.username" value="gSdyGeijfP"/>
             <property name="connection.password" value="QDrrEGhXoP"/>
